@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import librairie.model.Livre;
 
 @RestController
@@ -26,8 +26,15 @@ public class LivreController {
     }
 
     @GetMapping
-    public List<Livre> lister() {
-        return livres;
+    public List<Livre> lister(
+            @RequestParam(name = "auteur", required = false) String auteur) {
+        if (auteur == null) {
+            return livres;
+        }
+        return livres.stream()
+                .filter(l -> l.getAuteur().toLowerCase()
+                        .contains(auteur.toLowerCase()))
+                .toList();
     }
     @GetMapping("/{id}")
     public ResponseEntity<Livre> trouver(@PathVariable("id") Long id) {
