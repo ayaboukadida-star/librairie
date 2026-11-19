@@ -15,6 +15,7 @@ public class LivreService {
     private long prochainId = 6;
 
     public LivreService() {
+        System.out.println(">>> LivreService créé");
         livres.add(new Livre(1L, "Les Misérables", "Victor Hugo", 1862));
         livres.add(new Livre(2L, "Notre-Dame de Paris", "Victor Hugo", 1831));
         livres.add(new Livre(3L, "L'Étranger", "Albert Camus", 1942));
