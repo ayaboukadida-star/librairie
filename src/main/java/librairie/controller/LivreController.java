@@ -2,7 +2,8 @@ package librairie.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,5 +28,13 @@ public class LivreController {
     @GetMapping
     public List<Livre> lister() {
         return livres;
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Livre> trouver(@PathVariable("id") Long id) {
+        return livres.stream()
+                .filter(l -> l.getId().equals(id))
+                .findFirst()
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
