@@ -2,7 +2,7 @@ package librairie.controller;
 
 import java.net.URI;
 import java.util.List;
-
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,17 +51,14 @@ public class LivreController {
 
     @Operation(summary = "Créer un livre")
     @PostMapping
-    public ResponseEntity<Livre> creer(@RequestBody Livre livre) {
-        if (livre.getTitre() == null || livre.getTitre().isBlank()) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<Livre> creer(@Valid @RequestBody Livre livre) {
         Livre cree = livreService.enregistrer(livre);
         URI adresse = URI.create("/api/livres/" + cree.getId());
         return ResponseEntity.created(adresse).body(cree);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Livre> modifier(@PathVariable Long id, @RequestBody Livre livre) {
+    public ResponseEntity<Livre> modifier(@PathVariable Long id, @Valid @RequestBody Livre livre) {
         return livreService.modifier(id, livre)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
