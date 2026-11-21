@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.PutMapping;
 import librairie.model.Livre;
 import librairie.service.LivreService;
 
@@ -48,5 +48,11 @@ public class LivreController {
         Livre cree = livreService.enregistrer(livre);
         URI adresse = URI.create("/api/livres/" + cree.getId());
         return ResponseEntity.created(adresse).body(cree);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Livre> modifier(@PathVariable Long id, @RequestBody Livre livre) {
+        return livreService.modifier(id, livre)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
