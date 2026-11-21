@@ -1,7 +1,10 @@
 package librairie.controller;
 
 import java.util.List;
+import java.net.URI;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,5 +42,11 @@ public class LivreController {
         return livreService.trouver(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+    @PostMapping
+    public ResponseEntity<Livre> creer(@RequestBody Livre livre) {
+        Livre cree = livreService.enregistrer(livre);
+        URI adresse = URI.create("/api/livres/" + cree.getId());
+        return ResponseEntity.created(adresse).body(cree);
     }
 }
