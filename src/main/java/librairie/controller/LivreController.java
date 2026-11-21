@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PutMapping;
 import librairie.model.Livre;
 import librairie.service.LivreService;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
 @RestController
 @RequestMapping("/api/livres")
 public class LivreController {
@@ -45,6 +45,9 @@ public class LivreController {
     }
     @PostMapping
     public ResponseEntity<Livre> creer(@RequestBody Livre livre) {
+        if (livre.getTitre() == null || livre.getTitre().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
         Livre cree = livreService.enregistrer(livre);
         URI adresse = URI.create("/api/livres/" + cree.getId());
         return ResponseEntity.created(adresse).body(cree);
@@ -54,5 +57,12 @@ public class LivreController {
         return livreService.modifier(id, livre)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> supprimer(@PathVariable Long id) {
+        if (!livreService.supprimer(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 }
